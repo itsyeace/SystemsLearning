@@ -11,6 +11,7 @@ class UInputAction;
 class UInteractionComponent;
 class UInventoryComponent;
 class UEquipmentComponent;
+class UAttributeComponent;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -58,6 +59,9 @@ private:
 	UPROPERTY()
 	UInteractionComponent* InteractionComp;
 
+	UPROPERTY()
+	UAttributeComponent* AttributeComp;
+
 public:
 
 	/** Constructor */
@@ -79,6 +83,9 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	void OnInteract();
+
+	UFUNCTION()
+	void HandleDeath();
 
 public:
 

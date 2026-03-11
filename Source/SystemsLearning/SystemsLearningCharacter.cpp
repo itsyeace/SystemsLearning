@@ -14,6 +14,7 @@
 #include "InteractionComponent.h"
 #include "InventoryComponent.h"
 #include "EquipmentComponent.h"
+#include "AttributeComponent.h"
 
 ASystemsLearningCharacter::ASystemsLearningCharacter()
 {
@@ -49,6 +50,8 @@ ASystemsLearningCharacter::ASystemsLearningCharacter()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	AttributeComp = CreateDefaultSubobject<UAttributeComponent>(TEXT("AttributeComponent"));
+
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 }
@@ -56,6 +59,8 @@ ASystemsLearningCharacter::ASystemsLearningCharacter()
 void ASystemsLearningCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AttributeComp->OnDeath.AddDynamic(this, &ASystemsLearningCharacter::HandleDeath);
 }
 
 void ASystemsLearningCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -88,6 +93,25 @@ void ASystemsLearningCharacter::OnInteract()
 	if (InteractionComp) {
 		InteractionComp->TryInteract();
 		UE_LOG(LogSystemsLearning, Error, TEXT("Interaction Pressed!"));
+	}
+}
+
+void ASystemsLearningCharacter::HandleDeath()
+{
+	if (UCharacterMovementComponent* MovementComp = GetCharacterMovement())
+	{
+			MovementComp->DisableMovement();
+	}
+
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+			DisableInput(PlayerController);
+	}
+
+	if (UCapsuleComponent* CapsuleComp = GetCapsuleComponent())
+	{
+		CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+		CapsuleComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	}
 }
 
