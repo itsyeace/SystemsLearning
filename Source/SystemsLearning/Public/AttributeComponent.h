@@ -33,5 +33,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Health")
 	FOnDeath OnDeath;
+
+	UPROPERTY()
+	TArray<UAttributeComponent*> Variants;
 		
 };

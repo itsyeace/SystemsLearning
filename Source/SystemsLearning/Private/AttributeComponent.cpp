@@ -12,6 +12,14 @@ void UAttributeComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	GetOwner()->GetComponents<UAttributeComponent>(Variants);
+
+	if (Variants.Num() > 1)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("More than 1 Attribute Component Found!"));
+		return;
+	}
+
 	CurrentHealth = MaxHealth;
 
 	AActor* MyOwner = GetOwner();
