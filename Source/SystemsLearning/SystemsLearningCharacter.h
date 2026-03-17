@@ -59,15 +59,15 @@ private:
 	UPROPERTY()
 	UInteractionComponent* InteractionComp;
 
-	UPROPERTY()
-	UAttributeComponent* AttributeComp;
-
 public:
 
 	/** Constructor */
 	ASystemsLearningCharacter();	
 
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UAttributeComponent* AttributeComp;
 
 protected:
 
